@@ -17,6 +17,10 @@ Flutter-Multiplattform-App (Android, iOS, Web) als Helfer für die Axolotl-Haltu
 - **Pflegeprotokoll** (Wasserwechsel, Filter, Beobachtungen, …)
 - Lokale Speicherung (SharedPreferences), offline nutzbar
 
+## Branding
+
+App-Logo unter `assets/branding/` (auch als Android-/iOS-/Web-Launcher-Icon eingebunden).
+
 ## Starten
 
 Voraussetzung: Flutter SDK (≥ 3.32 / Dart 3.8).

@@ -23,11 +23,28 @@ class HomeScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
       children: [
-        Text(
-          'AxolotlCare',
-          style: Theme.of(context).textTheme.headlineLarge,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Image.asset(
+                'assets/branding/app_logo_512.png',
+                width: 64,
+                height: 64,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                'AxolotlCare',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Text(
           'Haltungswissen, Wasserwerte und Pflege – klar und quellenbasiert.',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
