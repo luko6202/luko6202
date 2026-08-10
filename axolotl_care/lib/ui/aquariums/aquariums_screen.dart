@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/content/color_morphs.dart';
 import '../../data/repositories/app_repository.dart';
 import '../../models/models.dart';
 import '../../theme/app_theme.dart';
@@ -11,6 +12,9 @@ class AquariumsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repo = context.watch<AppRepository>();
+    final selected = repo.selectedAquarium;
+    final residents =
+        selected == null ? const <AxolotlProfile>[] : repo.axolotlsFor(selected.id);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
@@ -24,7 +28,7 @@ class AquariumsScreen extends StatelessWidget {
               ),
             ),
             FilledButton.icon(
-              onPressed: () => _upsert(context, repo),
+              onPressed: () => _upsertAquarium(context, repo),
               icon: const Icon(Icons.add),
               label: const Text('Neu'),
             ),
@@ -32,8 +36,10 @@ class AquariumsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Mehrere Becken möglich – Wasserwerte und Pflege greifen immer auf das aktive Aquarium zu.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.reed),
+          'Becken verwalten und Axolotl mit Farbschlag zuordnen.',
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppColors.reed,
+              ),
         ),
         const SizedBox(height: 18),
         if (repo.aquariums.isEmpty)
@@ -59,7 +65,7 @@ class AquariumsScreen extends StatelessWidget {
                 subtitle: Text(
                   [
                     '${aquarium.volumeLiters.toStringAsFixed(0)} Liter',
-                    if (aquarium.notes.isNotEmpty) aquarium.notes,
+                    '${repo.axolotlsFor(aquarium.id).length} Tier(e)',
                     if (aquarium.id == repo.selectedAquariumId) 'Aktiv',
                   ].join(' · '),
                 ),
@@ -67,14 +73,14 @@ class AquariumsScreen extends StatelessWidget {
                 trailing: PopupMenuButton<String>(
                   onSelected: (value) async {
                     if (value == 'edit') {
-                      await _upsert(context, repo, existing: aquarium);
+                      await _upsertAquarium(context, repo, existing: aquarium);
                     } else if (value == 'delete') {
                       final ok = await showDialog<bool>(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: const Text('Aquarium löschen?'),
                           content: const Text(
-                            'Alle zugehörigen Messungen und Pflegeeinträge werden entfernt.',
+                            'Alle zugehörigen Tiere, Messungen und Pflegeeinträge werden entfernt.',
                           ),
                           actions: [
                             TextButton(
@@ -102,11 +108,51 @@ class AquariumsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
           ],
+        if (selected != null) ...[
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Tiere in ${selected.name}',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () => _upsertAxolotl(context, repo, selected.id),
+                icon: const Icon(Icons.pets),
+                label: const Text('Tier'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          if (residents.isEmpty)
+            Text(
+              'Noch keine Axolotl erfasst. Lege Name und Farbschlag an.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.reed,
+                  ),
+            )
+          else
+            for (final animal in residents) ...[
+              _AxolotlTile(
+                profile: animal,
+                onEdit: () => _upsertAxolotl(
+                  context,
+                  repo,
+                  selected.id,
+                  existing: animal,
+                ),
+                onDelete: () => repo.deleteAxolotl(animal.id),
+              ),
+              const SizedBox(height: 8),
+            ],
+        ],
       ],
     );
   }
 
-  Future<void> _upsert(
+  Future<void> _upsertAquarium(
     BuildContext context,
     AppRepository repo, {
     Aquarium? existing,
@@ -173,5 +219,150 @@ class AquariumsScreen extends StatelessWidget {
       existing.notes = notesController.text.trim();
       await repo.updateAquarium(existing);
     }
+  }
+
+  Future<void> _upsertAxolotl(
+    BuildContext context,
+    AppRepository repo,
+    String aquariumId, {
+    AxolotlProfile? existing,
+  }) async {
+    final nameController = TextEditingController(text: existing?.name ?? '');
+    final notesController = TextEditingController(text: existing?.notes ?? '');
+    var morphId = existing?.morphId ?? colorMorphs.first.id;
+    var hasGfp = existing?.hasGfp ?? false;
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            return AlertDialog(
+              title: Text(existing == null ? 'Axolotl anlegen' : 'Axolotl bearbeiten'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'z. B. Luna',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: morphId,
+                      decoration: const InputDecoration(labelText: 'Farbschlag'),
+                      items: [
+                        for (final morph in colorMorphs)
+                          DropdownMenuItem(
+                            value: morph.id,
+                            child: Text(morph.nameDe),
+                          ),
+                      ],
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setLocalState(() => morphId = value);
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      value: hasGfp,
+                      onChanged: (value) {
+                        setLocalState(() => hasGfp = value ?? false);
+                      },
+                      title: const Text('GFP'),
+                      subtitle: const Text('Fluoreszenz unter Blau-/UV-Licht'),
+                    ),
+                    TextField(
+                      controller: notesController,
+                      decoration: const InputDecoration(labelText: 'Notiz'),
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Abbrechen'),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Speichern'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (saved != true || nameController.text.trim().isEmpty) return;
+
+    if (existing == null) {
+      await repo.addAxolotl(
+        aquariumId: aquariumId,
+        name: nameController.text,
+        morphId: morphId,
+        hasGfp: hasGfp,
+        notes: notesController.text,
+      );
+    } else {
+      existing.name = nameController.text.trim();
+      existing.morphId = morphId;
+      existing.hasGfp = hasGfp;
+      existing.notes = notesController.text.trim();
+      await repo.updateAxolotl(existing);
+    }
+  }
+}
+
+class _AxolotlTile extends StatelessWidget {
+  const _AxolotlTile({
+    required this.profile,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  final AxolotlProfile profile;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final morph = colorMorphById(profile.morphId);
+    final morphLabel = morph?.nameDe ?? 'Unbekannt';
+
+    return Material(
+      color: Colors.white.withValues(alpha: 0.55),
+      borderRadius: BorderRadius.circular(16),
+      child: ListTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: AppColors.lagoon.withValues(alpha: 0.14)),
+        ),
+        title: Text(profile.name),
+        subtitle: Text(
+          [
+            morphLabel,
+            if (profile.hasGfp) 'GFP',
+            if (profile.notes.isNotEmpty) profile.notes,
+          ].join(' · '),
+        ),
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'edit') onEdit();
+            if (value == 'delete') onDelete();
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(value: 'edit', child: Text('Bearbeiten')),
+            PopupMenuItem(value: 'delete', child: Text('Löschen')),
+          ],
+        ),
+      ),
+    );
   }
 }

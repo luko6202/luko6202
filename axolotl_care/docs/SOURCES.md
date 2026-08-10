@@ -12,5 +12,9 @@ Die Artikel in `lib/data/content/knowledge_articles.dart` fassen Haltungswissen 
 | UK Ambystoma Genetic Stock Center | https://ambystoma.as.uky.edu/education1/guide-to-axolotl-husbandry | Laborhaltung, Futterprotokoll, Pathogene |
 | PetMD – What Do Axolotls Eat? | https://www.petmd.com/exotic/what-do-axolotls-eat | Fütterungsfrequenz |
 | ExoPetGuides – Axolotl Care Guide | https://exopetguides.com/axolotls/axolotl-care-guide/ | Parameterübersicht (GH/KH u. a.) |
+| UK Ambystoma GSC – Pigmentation lesson | https://ambystoma.as.uky.edu/genetic-stock-center/documents/Pigmentation_Lesson.pdf | Wildtype, Melanoid, Copper, Albino |
+| Axolotl Central – Color Morphs Guide | https://www.axolotlcentral.com/post/axolotl-color-morphs-guide | Morphen-Übersicht |
+| Axolotl Planet – Genetics intro | https://axolotlplanet.com/blogs/all-about-axolotls/an-introduction-to-axolotl-genetics | Genetik/Kombinationen |
+| ExoPetGuides – Genetics Basics | https://exopetguides.com/axolotl/axolotl-genetics-basics/ | Rezessive Morph-Gene, GFP |
 
 Die App ersetzt keine tierärztliche Beratung.

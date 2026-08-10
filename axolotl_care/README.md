@@ -13,6 +13,8 @@ Flutter-Multiplattform-App (Android, iOS, Web) als Helfer für die Axolotl-Haltu
   - Krankheiten
   - Reinigung
   - Wasserwerte (komplettes Bild)
+  - Farbschläge / Morphen (+ Katalog)
+- **Axolotl-Profile** pro Becken inkl. Farbschlag und optional GFP
 - **Wasserwerte** erfassen und automatisch einordnen (gut / beachten / kritisch)
 - **Pflegeprotokoll** (Wasserwechsel, Filter, Beobachtungen, …)
 - Lokale Speicherung (SharedPreferences), offline nutzbar

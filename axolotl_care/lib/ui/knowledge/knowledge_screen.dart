@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/content/knowledge_articles.dart';
 import '../../theme/app_theme.dart';
 import 'article_detail_screen.dart';
+import 'morphs_screen.dart';
 
 class KnowledgeScreen extends StatelessWidget {
   const KnowledgeScreen({super.key});
@@ -15,17 +16,34 @@ class KnowledgeScreen extends StatelessWidget {
         Text('Wissen', style: Theme.of(context).textTheme.headlineLarge),
         const SizedBox(height: 8),
         Text(
-          'Quellenbasierte Grundlagen zu Aquarium, Kauf, Haltung, Fütterung, Gesundheit, Reinigung und Wasserwerten.',
+          'Quellenbasierte Grundlagen zu Aquarium, Kauf, Haltung, Fütterung, Gesundheit, '
+          'Reinigung, Wasserwerten und Farbschlägen.',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppColors.reed,
                 height: 1.35,
               ),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const MorphsScreen()),
+            );
+          },
+          icon: const Icon(Icons.palette_outlined),
+          label: const Text('Farbschlag-Katalog öffnen'),
+        ),
+        const SizedBox(height: 18),
         for (final article in knowledgeArticles) ...[
           InkWell(
             borderRadius: BorderRadius.circular(18),
             onTap: () {
+              if (article.id == 'farbschlaege') {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const MorphsScreen()),
+                );
+                return;
+              }
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => ArticleDetailScreen(article: article),

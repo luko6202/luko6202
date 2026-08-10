@@ -16,11 +16,13 @@ class AppRepository extends ChangeNotifier {
   static const _aquariumsKey = 'aquariums';
   static const _readingsKey = 'readings';
   static const _careKey = 'care_logs';
+  static const _axolotlsKey = 'axolotls';
   static const _selectedKey = 'selected_aquarium_id';
 
   List<Aquarium> aquariums = [];
   List<WaterReading> readings = [];
   List<CareLogEntry> careLogs = [];
+  List<AxolotlProfile> axolotls = [];
   String? selectedAquariumId;
 
   static Future<AppRepository> create() async {
@@ -35,6 +37,8 @@ class AppRepository extends ChangeNotifier {
     readings =
         _decodeList(_prefs.getString(_readingsKey), WaterReading.fromJson);
     careLogs = _decodeList(_prefs.getString(_careKey), CareLogEntry.fromJson);
+    axolotls =
+        _decodeList(_prefs.getString(_axolotlsKey), AxolotlProfile.fromJson);
     selectedAquariumId = _prefs.getString(_selectedKey);
 
     if (aquariums.isNotEmpty &&
@@ -66,6 +70,12 @@ class AppRepository extends ChangeNotifier {
         .where((c) => c.aquariumId == aquariumId)
         .toList(growable: false);
     return list.reversed.toList(growable: false);
+  }
+
+  List<AxolotlProfile> axolotlsFor(String aquariumId) {
+    return axolotls
+        .where((a) => a.aquariumId == aquariumId)
+        .toList(growable: false);
   }
 
   WaterReading? latestReading(String aquariumId) {
@@ -113,6 +123,8 @@ class AppRepository extends ChangeNotifier {
         readings.where((r) => r.aquariumId != id).toList(growable: false);
     careLogs =
         careLogs.where((c) => c.aquariumId != id).toList(growable: false);
+    axolotls =
+        axolotls.where((a) => a.aquariumId != id).toList(growable: false);
     if (selectedAquariumId == id) {
       selectedAquariumId = aquariums.isEmpty ? null : aquariums.first.id;
       if (selectedAquariumId == null) {
@@ -199,6 +211,42 @@ class AppRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<AxolotlProfile> addAxolotl({
+    required String aquariumId,
+    required String name,
+    required String morphId,
+    bool hasGfp = false,
+    String notes = '',
+  }) async {
+    final profile = AxolotlProfile(
+      id: _uuid.v4(),
+      aquariumId: aquariumId,
+      name: name.trim(),
+      morphId: morphId,
+      hasGfp: hasGfp,
+      notes: notes.trim(),
+    );
+    axolotls = [...axolotls, profile];
+    await _persistAxolotls();
+    notifyListeners();
+    return profile;
+  }
+
+  Future<void> updateAxolotl(AxolotlProfile profile) async {
+    axolotls = [
+      for (final item in axolotls)
+        if (item.id == profile.id) profile else item,
+    ];
+    await _persistAxolotls();
+    notifyListeners();
+  }
+
+  Future<void> deleteAxolotl(String id) async {
+    axolotls = axolotls.where((a) => a.id != id).toList(growable: false);
+    await _persistAxolotls();
+    notifyListeners();
+  }
+
   Future<void> _persistAquariums() async {
     await _prefs.setString(
       _aquariumsKey,
@@ -220,11 +268,19 @@ class AppRepository extends ChangeNotifier {
     );
   }
 
+  Future<void> _persistAxolotls() async {
+    await _prefs.setString(
+      _axolotlsKey,
+      jsonEncode(axolotls.map((e) => e.toJson()).toList()),
+    );
+  }
+
   Future<void> _persistAll() async {
     await Future.wait([
       _persistAquariums(),
       _persistReadings(),
       _persistCare(),
+      _persistAxolotls(),
     ]);
   }
 

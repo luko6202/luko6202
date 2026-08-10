@@ -57,7 +57,7 @@ const knowledgeArticles = <KnowledgeArticle>[
       ArticleSection(
         heading: 'Einfahren vor dem Einzug',
         body:
-            'Das Aquarium sollte vollständig dufahren (Stickstoffkreislauf) sein, bevor ein '
+            'Das Aquarium sollte vollständig eingefahren (Stickstoffkreislauf) sein, bevor ein '
             'Axolotl einzieht: Ammoniak und Nitrit dauerhaft 0, Nitrat kontrollierbar niedrig. '
             'Leitungswasser immer mit Aufbereiter gegen Chlor/Chloramin behandeln.',
       ),
@@ -539,6 +539,84 @@ const knowledgeArticles = <KnowledgeArticle>[
         title: 'ExoPetGuides – Axolotl Care Guide (parameter table synthesis)',
         url: 'https://exopetguides.com/axolotls/axolotl-care-guide/',
         note: 'GH/KH-Orientierung und Parameterübersicht mit Quellenverweisen',
+      ),
+    ],
+  ),
+  KnowledgeArticle(
+    id: 'farbschlaege',
+    category: 'Farbschläge',
+    title: 'Farbschläge und Morphen',
+    summary:
+        'Wildtyp, Leuzistisch, Albino, Melanoid, Copper, Axanthic und gängige Kombinationen – inkl. GFP.',
+    sections: [
+      ArticleSection(
+        heading: 'Warum es so viele Farben gibt',
+        body:
+            'Die auffälligen Farbschläge von Ambystoma mexicanum entstehen vor allem durch Mutationen '
+            'der Pigmentzellen (Chromatophoren): Melanophoren (dunkel), Xanthophoren (gelb) und '
+            'Iridophoren (irisierend). Die meisten klassischen Morphen folgen autosomal-rezessiver '
+            'Vererbung – das Merkmal zeigt sich nur, wenn beide Allele die Mutation tragen. '
+            'Wildtyp ist der dominante, natürliche Phänotyp.',
+      ),
+      ArticleSection(
+        heading: 'Die wichtigsten Basis-Morphen',
+        body:
+            '• Wildtyp: braun/grau bis leicht grünlich, dunkle Augen, oft Goldring.\n'
+            '• Leuzistisch (d/d): heller Körper, dunkle Augen; Pigmentzellen wandern nicht normal.\n'
+            '• Albino (a/a): kein Eumelanin; Goldalbino gelblich mit rosa/roten Augen, Weißalbino oft '
+            'zusammen mit Leuzismus sehr hell.\n'
+            '• Melanoid (m/m): sehr dunkel, kaum Iridophoren/Glanz.\n'
+            '• Copper (c/c): kupfer-/beigetöne statt klassischem Schwarz.\n'
+            '• Axanthic (ax/ax): ohne Gelbpigment, oft grau-/lavendelartig.\n\n'
+            'In AxolotlCare findest du diese Morphen auch als Katalog und kannst sie deinen Tieren zuordnen.',
+      ),
+      ArticleSection(
+        heading: 'Kombinationen und Handelsnamen',
+        body:
+            'Morphen lassen sich kombinieren, z. B. leuzistisch-melanoid oder melanoid-albino. '
+            'Zusätzliche Bezeichnungen wie Dirty Leucistic, High Iridophore, Starburst oder Sunburst '
+            'beschreiben oft Intensität oder Muster, nicht immer ein eigenes Gen. Ohne Züchterangaben '
+            'oder Nachzucht bleibt die genaue Genetik manchmal unsicher – Phänotyp und Notizen helfen trotzdem.',
+      ),
+      ArticleSection(
+        heading: 'GFP',
+        body:
+            'GFP (Green Fluorescent Protein) ist ein dominant vererbtes, laborseitig eingeführtes '
+            'Merkmal. Unter Blau-/UV-Licht fluoreszieren die Tiere grün. GFP kann auf nahezu jeden '
+            'Farbschlag „gelegt“ werden und ist kein klassischer Pigment-Morph. Ethisch und rechtlich '
+            'unterschiedlich bewertet – in der App als separates Merkmal am Tier speicherbar.',
+      ),
+      ArticleSection(
+        heading: 'Haltungshinweis',
+        body:
+            'Farbschlag ändert die grundlegenden Haltungsansprüche nicht: kühles, sauberes Wasser, '
+            'sichere Einrichtung und passende Fütterung gelten für alle Morphen. Sehr helle Tiere können '
+            'unter starkem Licht empfindlicher wirken – Schattenplätze bleiben ohnehin sinnvoll.',
+      ),
+    ],
+    sources: [
+      SourceRef(
+        title: 'Caudata Culture – Ambystoma mexicanum (colour varieties)',
+        url: 'https://www.caudata.org/cc/species/Ambystoma/A_mexicanum.shtml',
+      ),
+      SourceRef(
+        title: 'UK Ambystoma Genetic Stock Center – Pigmentation lesson',
+        url:
+            'https://ambystoma.as.uky.edu/genetic-stock-center/documents/Pigmentation_Lesson.pdf',
+        note: 'Wildtype, Melanoid, Copper, Albino',
+      ),
+      SourceRef(
+        title: 'Axolotl Central – Color Morphs Guide',
+        url: 'https://www.axolotlcentral.com/post/axolotl-color-morphs-guide',
+      ),
+      SourceRef(
+        title: 'Axolotl Planet – Introduction to Axolotl Genetics',
+        url:
+            'https://axolotlplanet.com/blogs/all-about-axolotls/an-introduction-to-axolotl-genetics',
+      ),
+      SourceRef(
+        title: 'ExoPetGuides – Axolotl Genetics Basics',
+        url: 'https://exopetguides.com/axolotl/axolotl-genetics-basics/',
       ),
     ],
   ),

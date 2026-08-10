@@ -49,6 +49,64 @@ class ArticleSection {
   final String body;
 }
 
+class ColorMorph {
+  const ColorMorph({
+    required this.id,
+    required this.nameDe,
+    required this.nameEn,
+    required this.shortDescription,
+    required this.details,
+    required this.hallmarks,
+  });
+
+  final String id;
+  final String nameDe;
+  final String nameEn;
+  final String shortDescription;
+  final String details;
+  final List<String> hallmarks;
+}
+
+class AxolotlProfile {
+  AxolotlProfile({
+    required this.id,
+    required this.aquariumId,
+    required this.name,
+    required this.morphId,
+    this.hasGfp = false,
+    this.notes = '',
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
+
+  final String id;
+  String aquariumId;
+  String name;
+  String morphId;
+  bool hasGfp;
+  String notes;
+  final DateTime createdAt;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'aquariumId': aquariumId,
+        'name': name,
+        'morphId': morphId,
+        'hasGfp': hasGfp,
+        'notes': notes,
+        'createdAt': createdAt.toIso8601String(),
+      };
+
+  factory AxolotlProfile.fromJson(Map<String, dynamic> json) => AxolotlProfile(
+        id: json['id'] as String,
+        aquariumId: json['aquariumId'] as String,
+        name: json['name'] as String,
+        morphId: json['morphId'] as String? ?? 'other',
+        hasGfp: json['hasGfp'] as bool? ?? false,
+        notes: json['notes'] as String? ?? '',
+        createdAt: DateTime.parse(json['createdAt'] as String),
+      );
+}
+
 class Aquarium {
   Aquarium({
     required this.id,

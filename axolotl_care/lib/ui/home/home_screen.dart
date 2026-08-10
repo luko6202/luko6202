@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/content/knowledge_articles.dart';
+import '../../data/content/color_morphs.dart';
 import '../../data/repositories/app_repository.dart';
 import '../../models/models.dart';
 import '../../theme/app_theme.dart';
-import '../knowledge/article_detail_screen.dart';
+import '../knowledge/morphs_screen.dart';
 import '../widgets/status_chip.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,7 +18,8 @@ class HomeScreen extends StatelessWidget {
     final aquarium = repo.selectedAquarium;
     final latest =
         aquarium == null ? null : repo.latestReading(aquarium.id);
-    final tip = knowledgeArticles.first;
+    final residents =
+        aquarium == null ? const <AxolotlProfile>[] : repo.axolotlsFor(aquarium.id);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
@@ -58,7 +59,11 @@ class HomeScreen extends StatelessWidget {
             onCreate: () => _showCreateDialog(context, repo),
           )
         else ...[
-          _StatusPanel(aquarium: aquarium, reading: latest),
+          _StatusPanel(
+            aquarium: aquarium,
+            reading: latest,
+            residents: residents,
+          ),
           const SizedBox(height: 20),
           if (repo.aquariums.length > 1) ...[
             Text('Aktives Becken', style: Theme.of(context).textTheme.titleMedium),
@@ -78,10 +83,10 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 20),
           ],
         ],
-        Text('Zum Nachlesen', style: Theme.of(context).textTheme.titleLarge),
+        Text('Farbschläge', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
         Text(
-          tip.summary,
+          'Wildtyp, Leuzistisch, Albino, Melanoid, Copper und weitere Morphen im Katalog.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.reed,
               ),
@@ -92,12 +97,10 @@ class HomeScreen extends StatelessWidget {
           child: TextButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ArticleDetailScreen(article: tip),
-                ),
+                MaterialPageRoute(builder: (_) => const MorphsScreen()),
               );
             },
-            child: Text('Artikel „${tip.title}“ öffnen'),
+            child: const Text('Farbschlag-Katalog öffnen'),
           ),
         ),
         const SizedBox(height: 8),
@@ -198,10 +201,15 @@ class _EmptyAquariumPrompt extends StatelessWidget {
 }
 
 class _StatusPanel extends StatelessWidget {
-  const _StatusPanel({required this.aquarium, required this.reading});
+  const _StatusPanel({
+    required this.aquarium,
+    required this.reading,
+    required this.residents,
+  });
 
   final Aquarium aquarium;
   final WaterReading? reading;
+  final List<AxolotlProfile> residents;
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +240,14 @@ class _StatusPanel extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${aquarium.volumeLiters.toStringAsFixed(0)} Liter',
+            [
+              '${aquarium.volumeLiters.toStringAsFixed(0)} Liter',
+              if (residents.isNotEmpty)
+                residents
+                    .map((a) => colorMorphById(a.morphId)?.nameDe ?? a.name)
+                    .take(3)
+                    .join(', '),
+            ].join(' · '),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white.withValues(alpha: 0.85),
                 ),
