@@ -78,23 +78,20 @@ def create_poster() -> Image.Image:
     rounded_panel(background, (105, 110, 1610, 1980), 72, CREAM, 242)
     draw = ImageDraw.Draw(background)
 
-    draw.rounded_rectangle((185, 190, 720, 310), radius=60, fill=CORAL)
-    draw_centered(draw, (185, 190, 720, 310), "KURSANGEBOT", font(49, True), WHITE)
+    draw.text((185, 225), "AN ALLE", font=font(62, True), fill=CORAL)
+    draw.text((185, 315), "MÄDCHEN & JUNGEN", font=font(88, True), fill=NAVY)
+    draw.text((185, 430), "VON DER 1. BIS 13. KLASSE!", font=font(52, True), fill=NAVY)
 
-    draw.text((185, 395), "AN ALLE", font=font(62, True), fill=CORAL)
-    draw.text((185, 485), "MÄDCHEN & JUNGEN", font=font(88, True), fill=NAVY)
-    draw.text((185, 600), "VON DER 1. BIS 13. KLASSE!", font=font(52, True), fill=NAVY)
+    draw.rounded_rectangle((185, 585, 425, 613), radius=14, fill=GOLD)
+    draw.text((185, 675), "RHYTHMISCHE", font=font(102, True), fill=NAVY)
+    draw.text((175, 810), "SPORT", font=font(190, True), fill=NAVY)
+    draw.text((175, 1005), "GYMNASTIK", font=font(161, True), fill=NAVY)
+    draw.text((185, 1220), "TRAINING", font=font(63, True), fill=CORAL)
 
-    draw.rounded_rectangle((185, 755, 425, 783), radius=14, fill=GOLD)
-    draw.text((185, 845), "RHYTHMISCHE", font=font(102, True), fill=NAVY)
-    draw.text((175, 980), "SPORT", font=font(190, True), fill=NAVY)
-    draw.text((175, 1175), "GYMNASTIK", font=font(161, True), fill=NAVY)
-    draw.text((185, 1390), "TRAINING", font=font(63, True), fill=CORAL)
-
-    draw.rounded_rectangle((185, 1560, 985, 1680), radius=60, fill=MINT)
+    draw.rounded_rectangle((185, 1390, 985, 1510), radius=60, fill=MINT)
     draw_centered(
         draw,
-        (185, 1560, 985, 1680),
+        (185, 1390, 985, 1510),
         "KOMM VORBEI & MACH MIT!",
         font(44, True),
         NAVY,
@@ -105,7 +102,7 @@ def create_poster() -> Image.Image:
     draw = ImageDraw.Draw(background)
     draw.text((185, 2500), "JEDEN MITTWOCH", font=font(76, True), fill=WHITE)
     draw.text((175, 2610), "17–19 UHR", font=font(157, True), fill=GOLD)
-    draw.text((185, 2800), "AUSSER IN DEN FERIEN", font=font(48, True), fill=WHITE)
+    draw.text((185, 2800), "außer in den Ferien", font=font(48, True), fill=WHITE)
     draw.line((185, 2910, 1545, 2910), fill=CORAL, width=12)
     draw.text((185, 2980), "MEHRZWECKHALLE", font=font(52, True), fill=WHITE)
     draw.text((180, 3065), "Groß Köris", font=font(105, True), fill=WHITE)
