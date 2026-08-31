@@ -75,7 +75,7 @@ def create_poster() -> Image.Image:
 
     # A calm field behind the headline keeps the message readable while preserving
     # the movement of the illustration.
-    rounded_panel(background, (105, 110, 1610, 1980), 72, CREAM, 242)
+    rounded_panel(background, (105, 110, 1610, 1980), 72, CREAM, 200)
     draw = ImageDraw.Draw(background)
 
     draw.text((185, 225), "AN ALLE", font=font(62, True), fill=CORAL)
